@@ -39,7 +39,18 @@ en:
       prompt: What should I remember?
     message:
       content: 'You wrote: %{text}'
+      movie_search_result: 'Oh, I found %{count} movie(s) for you research %{search}'
+      movie_search_result_photo: 'I found this movie for %{title}'
+      ask_wanna_create_watcher: 'Do you want to be notified whenever the release date is out ?'
+      movie_search_no_result: 'Oops. I did not found any result for this movie'
+      buttons:
+        - 'Yes'
+        - 'No'
+    wanna_create_watcher:
+      confirm_watcher_creation: "Ok I'll tell you when the release date is announced"
+      end_of_flow: 'Glad I could help you'
+      error_in_flow: "Come on, dont rush. Its Friday, Im tired"
     remind_me:
       nothing: Nothing to remind
     start:
-      content: Hi there!
+      content: Hey ! No need to use a command. Just type the name of a movie, I'll handle the rest

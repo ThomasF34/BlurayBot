@@ -1,5 +1,8 @@
+require 'themoviedb-api'
+
 class TelegramWebhooksController < Telegram::Bot::UpdatesController
   include Telegram::Bot::UpdatesController::MessageContext
+  include PosterHelper
 
   def start!(*)
     respond_with :message, text: t('.content')
@@ -60,7 +63,29 @@ class TelegramWebhooksController < Telegram::Bot::UpdatesController
   end
 
   def message(message)
-    respond_with :message, text: t('.content', text: message['text'])
+    Tmdb::Api.key("f1e0257da91af374455ab285d41925ca")
+    res = MovieFetcher.search(message['text']).results.first
+    respond_with :message, text: t('.movie_search_no_result') if res.nil?
+
+    respond_with :photo, photo: get_poster_url(res.poster_path), caption: t('.movie_search_result_photo', title: message['text'])
+
+    save_context :wanna_create_watcher
+    respond_with :message, text: t('.ask_wanna_create_watcher'), reply_markup: {
+        keyboard: [t('.buttons')],
+        resize_keyboard: true,
+        one_time_keyboard: true,
+        selective: true,
+      }
+  end
+
+  def wanna_create_watcher(*args)
+    respond_with :message, text: t('.error_in_flow') unless args.any?
+
+    if args.join('') == 'Yes'
+      respond_with :message, text: t('.confirm_watcher_creation')
+    else
+      respond_with :message, text: t('.end_of_flow')
+    end
   end
 
   def inline_query(query, _offset)
